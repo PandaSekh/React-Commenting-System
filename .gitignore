@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+package-lock.json
+/studio/node_modules
 /.pnp
 .pnp.js
 
@@ -32,3 +34,4 @@ yarn-error.log*
 
 # vercel
 .vercel
+.env
