@@ -46,13 +46,15 @@ export default function Comment({ comment, firstParentId }) {
 			id={comment._id}
 			className={firstParentId ? "child" : ""}
 		>
-			<span>
+			<span className="comment-info-container">
 				<CommentImage
 					image={comment.userImage}
 					username={comment.name}
 				/>
-				Comment by <strong>{comment.name}</strong> on{" "}
-				<strong>{formatDate(comment._createdAt)}</strong>
+				<span className="comment-info">
+					Comment by <strong>{comment.name}</strong> on{" "}
+					<strong>{formatDate(comment._createdAt)}</strong>
+				</span>
 			</span>
 			<p className="comment-content">{comment.comment.trim()}</p>
 			<div className="reaction-div">

@@ -271,7 +271,8 @@ li {
 }
 
 .commentImage {
-	display: inline;
+	display: inline-block;
+	width: min-content;
 	margin-right: 10px;
 }
 
@@ -318,4 +319,13 @@ li {
 
 .emoji:hover {
 	opacity: 85%;
+}
+
+.comment-info {
+	margin: auto 0px;
+}
+
+.comment-info-container{
+	height: 40px;
+	display: flex;
 }
