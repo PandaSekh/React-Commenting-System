@@ -127,7 +127,7 @@ li {
 	padding: 7px 15px;
 	background-color: #dedede;
 	cursor: pointer;
-	margin-top: 5px;
+	/* margin-top: 5px; */
 	border: 1px solid #dedede;
 }
 
@@ -274,4 +274,44 @@ li {
 .commentImage > img {
 	width: 40px;
 	height: 40px;
+}
+
+.emoji {
+	margin: 10px;
+	font-size: 25px;
+	display: flex;
+	align-items: center;
+}
+
+.reaction-div {
+	margin-top: 5px;
+	display: inline-flex;
+}
+
+.emoji-container {
+	position: relative;
+	user-select: none;
+}
+
+.emoji-counter-div {
+	position: absolute;
+	top: -2px;
+	right: 3px;
+	z-index: -5;
+}
+
+.emoji-counter {
+	font-weight: bold;
+	padding: 2px 5px;
+	border-radius: 30%;
+	background-color: #f55742;
+	color: #fefefe;
+}
+
+.emoji {
+	cursor: pointer;
+}
+
+.emoji:hover {
+	opacity: 85%;
 }

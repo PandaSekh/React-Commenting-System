@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 import InputError from "./InputError";
 import { Fragment, useState } from "react";
 import SubmitMessage from "./SubmitMessage";
-import LoadingComponent from "../LoadingComponent";
 
 export default function AddCommentForm({ parentCommentId, firstParentId }) {
 	const [submitMessage, setSubmitMessage] = useState({});
@@ -58,9 +57,9 @@ export default function AddCommentForm({ parentCommentId, firstParentId }) {
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<input
 					type="text"
-					placeholder="Name"
+					placeholder="Name (Optional)"
 					name="name"
-					ref={register({ required: true, maxLength: 80 })}
+					ref={register({ required: false, maxLength: 80 })}
 				/>
 				{errors.name && <InputError error={"Your name is required"} />}
 				<input

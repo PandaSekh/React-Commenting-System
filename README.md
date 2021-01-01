@@ -6,6 +6,7 @@ Both are not mandatory. Next.js is used only for the API endpoints / Serverless 
 ### TO DO
 - [ ] Emoticon Reaction
 - [ ] Better CSS
-- [ ] Random image generator for profile pics
-- [ ] Google ReCaptcha Integration
+- [x] Random image generator for profile pics
+- [x] Google ReCaptcha Integration
 - [ ] Markdown support
+- [ ] Profile Image Upload

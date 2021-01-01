@@ -32,6 +32,28 @@ export default {
 			type: "array",
 			of: [{ type: "comment" }],
 		},
+		{
+			name: "reactions",
+			title: "Reactions",
+			type: "array",
+			of: [
+				{
+					type: "object",
+					fields: [
+						{
+							name: "emoji",
+							type: "string",
+							title: "Emoji",
+						},
+						{
+							name: "counter",
+							type: "number",
+							title: "Counter",
+						},
+					],
+				},
+			],
+		},
 		// {
 		// 	name: "childCommments",
 		// 	title: "Child Comments",

@@ -27,7 +27,6 @@ export default function AllComments() {
 
 		// Dynamically import Google ReCaptcha
 		(await import("../../lib/dynamicScriptLoader")).default(
-			"recaptcha",
 			`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`,
 			() => setIsLoading(false)
 		);

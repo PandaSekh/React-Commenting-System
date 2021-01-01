@@ -22,6 +22,7 @@ export default async (req, res) => {
 	doc._key = getKey();
 	doc._id = doc._key;
 	doc._createdAt = new Date();
+	if (!doc.name) doc.name = "Anonymous";
 	delete doc.token;
 
 	// If the doc has a parentCommentId, it means it's a child comment
