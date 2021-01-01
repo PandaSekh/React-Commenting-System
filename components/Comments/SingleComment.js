@@ -29,6 +29,17 @@ export default function Comment({ comment, firstParentId }) {
 		}
 	};
 
+	const formatDate = fullDate => {
+		const date = fullDate?.split("T")[0];
+		const year = date.split("-")[0];
+		const month = new Date(date).toLocaleDateString("default", {
+			month: "long",
+		});
+		const day = date.split("-")[2];
+
+		return `${day} ${month} ${year}`;
+	};
+
 	return (
 		<li
 			key={comment._id}
@@ -41,7 +52,7 @@ export default function Comment({ comment, firstParentId }) {
 					username={comment.name}
 				/>
 				Comment by <strong>{comment.name}</strong> on{" "}
-				<strong>{comment._createdAt?.split("T")[0]}</strong>
+				<strong>{formatDate(comment._createdAt)}</strong>
 			</span>
 			<p className="comment-content">{comment.comment.trim()}</p>
 			<div className="reaction-div">

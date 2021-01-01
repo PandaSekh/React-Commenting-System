@@ -7,6 +7,10 @@
 	font-size: 16px;
 }
 
+body {
+	padding-bottom: 50px;
+}
+
 h1 {
 	text-align: center;
 	margin: 30px;
