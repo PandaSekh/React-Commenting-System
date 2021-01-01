@@ -11,11 +11,18 @@ const client = sanityClient({
 
 export default async (req, res) => {
 	const doc = JSON.parse(req.body);
+	// Check ReCaptcha Token
+	const isValidToken = await verifyRecaptchaToken(doc.token);
+	if (!isValidToken) {
+		return res.status(406).end();
+	}
+
 	// Update the document with the required values for Sanity
 	doc._type = "comment";
 	doc._key = getKey();
 	doc._id = doc._key;
 	doc._createdAt = new Date();
+	delete doc.token;
 
 	// If the doc has a parentCommentId, it means it's a child comment
 	try {
@@ -26,12 +33,11 @@ export default async (req, res) => {
 			delete doc.parentCommentId;
 			delete doc.firstParentId;
 
-			const childKey = await appendChildComment(
-				firstParentId,
-				parentCommentId,
-				doc
+			await appendChildComment(firstParentId, parentCommentId, doc).then(
+				() => {
+					return res.status(200).json({ message: "Comment Created" });
+				}
 			);
-			return res.status(200).json({ message: "Comment Created" });
 		} else {
 			// If there's no parentCommentId, just create a new comment
 			client.create(doc).then(() => {
@@ -42,6 +48,18 @@ export default async (req, res) => {
 		return res.status(500).json({ message: err });
 	}
 };
+
+function verifyRecaptchaToken(token) {
+	return fetch("https://www.google.com/recaptcha/api/siteverify", {
+		method: "POST",
+		headers: { "Content-Type": "application/x-www-form-urlencoded" },
+		body: `secret=${process.env.RECAPTCHA_SECRET}&response=${token}`,
+	})
+		.then(r => r.json())
+		.then(j => {
+			return j.success;
+		});
+}
 
 async function appendChildComment(
 	firstParentId,
@@ -85,10 +103,11 @@ async function appendChildComment(
 		.patch(parentComment._id)
 		.set(parentComment)
 		.commit()
-		.then(r => console.log("Doc successfully patche. Doc id/key:", r._id));
+		.then(() => {
+			return childComment._key;
+		});
 
 	// Return the key or the id so we can focus the comment
-	return childComment._key;
 }
 
 // Recursive function which search every child for other children and returns the child to be modified

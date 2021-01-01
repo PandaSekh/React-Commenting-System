@@ -1,14 +1,16 @@
 import { useState, useEffect, Fragment } from "react";
-import { client } from "../../lib/sanityClient";
-import LoadingComponent from "../LoadingComponent";
 const query = `*[_type == "comment"]{_id, comment, name, _createdAt, childComments} | order (_createdAt)`;
-import Comment from "./SingleComment";
+import dynamic from "next/dynamic";
 
 export default function AllComments() {
 	const [comments, setComments] = useState();
 	const [isLoading, setIsLoading] = useState(true);
 
+	const Comment = dynamic(() => import("./SingleComment"));
+	const LoadingComponent = dynamic(() => import("../LoadingComponent"));
+
 	useEffect(async () => {
+		const client = (await import("../../lib/sanityClient")).client;
 		// Set the already existing comments
 		setComments(await client.fetch(query).then(r => r));
 		// Subscribe to the query Observable and update the state on each update
@@ -22,7 +24,13 @@ export default function AllComments() {
 				]);
 			}
 		});
-		setIsLoading(false);
+
+		// Dynamically import Google ReCaptcha
+		(await import("../../lib/dynamicScriptLoader")).default(
+			"recaptcha",
+			`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`,
+			() => setIsLoading(false)
+		);
 		// Unsubscribe on Component unmount
 		return () => {
 			sub.unsubscribe();

@@ -56,7 +56,7 @@ input[type="submit"] {
 	width: min-content;
 	margin: auto;
 	padding: 7px 15px;
-	background-color: transparent;
+	background-color: #dedede;
 	cursor: pointer;
 	margin-top: 5px;
 }
@@ -64,6 +64,13 @@ input[type="submit"] {
 input[type="submit"]:hover,
 button:hover {
 	box-shadow: 0 0 3pt 2pt #ed4e42;
+	outline-width: 0px;
+}
+
+input[type="submit"]:disabled,
+reply-button:disabled {
+	cursor: not-allowed;
+	box-shadow: none;
 	outline-width: 0px;
 }
 
@@ -118,7 +125,7 @@ li {
 	width: min-content;
 	margin: auto;
 	padding: 7px 15px;
-	background-color: transparent;
+	background-color: #dedede;
 	cursor: pointer;
 	margin-top: 5px;
 	border: 1px solid #dedede;
