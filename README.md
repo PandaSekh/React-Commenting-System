@@ -4,9 +4,10 @@ Commenting System built on top of [Next.js](https://nextjs.org/) for the API end
 Both are not mandatory. Next.js is used only for the API endpoints / Serverless functions, so to have a vanilla ReactJS app you can move those functions to AWS Lambda, Google Cloud Functions or another provider. Sanity is my data store of choice, but in this case I'mnot using anything too specific, so any NoSQL data store is good.
 
 ### TO DO
-- [ ] Emoticon Reaction
+- [x] Emoticon Reaction
 - [ ] Better CSS
 - [x] Random image generator for profile pics
 - [x] Google ReCaptcha Integration
 - [ ] Markdown support
 - [ ] Profile Image Upload
+- [ ] Documentation

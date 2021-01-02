@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from "react";
-const query = `*[_type == "comment"]{_id, comment, name, _createdAt, childComments} | order (_createdAt)`;
+const query = `*[_type == "comment"]{_id, comment, name, _createdAt, childComments, reactions} | order (_createdAt)`;
 import dynamic from "next/dynamic";
 
 export default function AllComments() {
@@ -16,17 +16,21 @@ export default function AllComments() {
 		// Subscribe to the query Observable and update the state on each update
 		const sub = client.listen(query).subscribe(update => {
 			if (update) {
-				setComments(comments => [
-					...comments.filter(
-						comment => comment._id !== update.result._id
-					),
-					update.result,
-				]);
+				setComments(comments =>
+					[
+						...comments.filter(
+							comment => comment._id !== update.result._id
+						),
+						update.result,
+					].sort((a, b) => (a._createdAt > b._createdAt ? 1 : -1))
+				);
 			}
 		});
 
 		// Dynamically import Google ReCaptcha
-		(await import("../../lib/dynamicScriptLoader")).default(
+		(
+			await import("../../lib/dynamicScriptLoader")
+		).default(
 			`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`,
 			() => setIsLoading(false)
 		);

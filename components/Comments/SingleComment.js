@@ -1,33 +1,12 @@
 import AddComment from "../AddComment/AddCommentForm";
 import { Fragment, useState } from "react";
 import CommentImage from "./CommentImage";
-import Emoji from "../Emoji/Emoji";
-// import EmojiAdderIcon from "../Emoji/EmojiAdderIcon";
+import ReactionBlock from "../Emoji/ReactionBlock";
 
 export default function Comment({ comment, firstParentId }) {
 	const [showReplyBox, setShowReplyBox] = useState(false);
 
-	const [canAddReaction, setCanAddReaction] = useState(true);
-
-	//temporary
-	const [counter, setCounter] = useState(Math.floor(Math.random() * 10) + 1);
-
 	const toggleReplyBox = () => setShowReplyBox(!showReplyBox);
-
-	const addReaction = () => {
-		if (canAddReaction) {
-			setCanAddReaction(false);
-			// fetch("/api/addReaction", {
-			// 	method:"POST",
-			// 	body: JSON.stringify({
-			// 	})
-			// })
-			setCounter(counter + 1);
-			setTimeout(() => {
-				setCanAddReaction(true);
-			}, 500);
-		}
-	};
 
 	const formatDate = fullDate => {
 		const date = fullDate?.split("T")[0];
@@ -61,12 +40,11 @@ export default function Comment({ comment, firstParentId }) {
 				<button onClick={toggleReplyBox} className="reply-button">
 					Reply
 				</button>
-				<span className="emoji-container" onClick={addReaction}>
-					<Emoji emoji={"😄"} label="happy-emoji" />
-					<div className="emoji-counter-div">
-						<span className="emoji-counter ">{counter}</span>
-					</div>
-				</span>
+				<ReactionBlock
+					reactions={comment.reactions}
+					commentId={comment._id}
+					firstParentId={firstParentId}
+				/>
 			</div>
 			{showReplyBox && (
 				<Fragment>

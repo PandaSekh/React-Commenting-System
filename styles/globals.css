@@ -30,9 +30,9 @@ a {
 	border-bottom: 1px solid #ababab;
 }
 
-button:active {
+/* button:active {
 	font-size: 17px;
-}
+} */
 
 *,
 *::before,
@@ -296,6 +296,7 @@ li {
 .emoji-container {
 	position: relative;
 	user-select: none;
+	display: flex;
 }
 
 .emoji-counter-div {
@@ -325,7 +326,30 @@ li {
 	margin: auto 0px;
 }
 
-.comment-info-container{
+.comment-info-container {
 	height: 40px;
 	display: flex;
+}
+
+.reaction-block {
+	display: inline-flex;
+}
+
+.reaction-adder-emoji {
+	user-select: none;
+	position: relative;
+	display: inline-block;
+}
+
+.emoji-adder-menu-open {
+	position: absolute;
+	display: flex;
+	top: 0px;
+	left: 35px;
+	border: 1px solid #808080;
+	/* border-radius: 10%; */
+}
+
+.emoji-adder-menu-closed {
+	display: none;
 }
