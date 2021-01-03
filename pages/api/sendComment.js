@@ -3,51 +3,59 @@ import getKey from "../../lib/keyGen";
 import sanitizeHtml from "sanitize-html";
 import { writeClient } from "../../lib/sanityClient";
 
-export default async (req, res) => {
-	const doc = JSON.parse(req.body);
-	// Check ReCaptcha Token
-	const isValidToken = await verifyRecaptchaToken(doc.token);
-	if (!isValidToken) {
-		return res.status(406).end();
-	}
-
-	// Update the document with the required values for Sanity
-	doc._type = "comment";
-	doc._key = getKey();
-	doc._id = doc._key;
-	doc._createdAt = new Date();
-	doc.comment = sanitizeHtml(doc.comment, {
-		allowedTags: ["b", "i", "em", "strong", "a", "li", "ul"],
-		allowedAttributes: {
-			a: ["href"],
-		},
-	});
-	if (!doc.name) doc.name = "Anonymous";
-	delete doc.token;
-
-	// If the doc has a parentCommentId, it means it's a child comment
-	try {
-		if (doc.parentCommentId) {
-			// Remove these values from the document, as they're not expected in the database
-			const firstParentId = doc.firstParentId;
-			const parentCommentId = doc.parentCommentId;
-			delete doc.parentCommentId;
-			delete doc.firstParentId;
-
-			await appendChildComment(firstParentId, parentCommentId, doc).then(
-				() => {
-					return res.status(200).json({ message: "Comment Created" });
-				}
-			);
-		} else {
-			// If there's no parentCommentId, just create a new comment
-			writeClient.create(doc).then(() => {
-				return res.status(200).json({ message: "Comment Created" });
-			});
+export default (req, res) => {
+	return new Promise(async (resolve, reject) => {
+		const doc = JSON.parse(req.body);
+		// Check ReCaptcha Token
+		const isValidToken = await verifyRecaptchaToken(doc.token);
+		if (!isValidToken) {
+			res.status(406).end();
+			reject();
 		}
-	} catch (err) {
-		return res.status(500).json({ message: String(err) });
-	}
+
+		// Update the document with the required values for Sanity
+		doc._type = "comment";
+		doc._key = getKey();
+		doc._id = doc._key;
+		doc._createdAt = new Date();
+		doc.comment = sanitizeHtml(doc.comment, {
+			allowedTags: ["b", "i", "em", "strong", "a", "li", "ul"],
+			allowedAttributes: {
+				a: ["href"],
+			},
+		});
+		if (!doc.name) doc.name = "Anonymous";
+		delete doc.token;
+
+		// If the doc has a parentCommentId, it means it's a child comment
+		try {
+			if (doc.parentCommentId) {
+				// Remove these values from the document, as they're not expected in the database
+				const firstParentId = doc.firstParentId;
+				const parentCommentId = doc.parentCommentId;
+				delete doc.parentCommentId;
+				delete doc.firstParentId;
+
+				await appendChildComment(
+					firstParentId,
+					parentCommentId,
+					doc
+				).then(() => {
+					res.status(200).json({ message: "Comment Created" });
+					resolve();
+				});
+			} else {
+				// If there's no parentCommentId, just create a new comment
+				writeClient.create(doc).then(() => {
+					res.status(200).json({ message: "Comment Created" });
+					resolve();
+				});
+			}
+		} catch (err) {
+			res.status(500).json({ message: String(err) });
+			reject();
+		}
+	});
 };
 
 function verifyRecaptchaToken(token) {

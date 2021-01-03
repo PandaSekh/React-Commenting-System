@@ -15,6 +15,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-hook-form": "^6.13.1",
-    "sanitize-html": "^2.3.0"
+    "sanitize-html": "^2.3.0",
+    "url-safety-scanner": "^1.0.0"
   }
 }
