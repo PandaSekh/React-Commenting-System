@@ -2,6 +2,9 @@ import Emoji from "./Emoji";
 import { Fragment, useState } from "react";
 import getKey from "../../lib/keyGen";
 
+/**
+ * Component which renders and handles a basic menu to add emoticons not already added by other users
+ */
 export default function EmojiAdder({
 	selectedEmojis,
 	updateEmojiCount,

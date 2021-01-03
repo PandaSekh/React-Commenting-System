@@ -9,7 +9,7 @@ export default function Home() {
 			<Header />
 			<div className="container">
 				<Comments />
-				<AddComment />
+				<AddComment extraClass={"main"} />
 			</div>
 		</Fragment>
 	);

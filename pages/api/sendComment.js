@@ -1,13 +1,7 @@
 require("dotenv").config();
-const sanityClient = require("@sanity/client");
 import getKey from "../../lib/keyGen";
-
-const client = sanityClient({
-	projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-	dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-	token: process.env.SANITY_W_TOKEN,
-	useCdn: false,
-});
+import sanitizeHtml from "sanitize-html";
+import { writeClient } from "../../lib/sanityClient";
 
 export default async (req, res) => {
 	const doc = JSON.parse(req.body);
@@ -22,6 +16,12 @@ export default async (req, res) => {
 	doc._key = getKey();
 	doc._id = doc._key;
 	doc._createdAt = new Date();
+	doc.comment = sanitizeHtml(doc.comment, {
+		allowedTags: ["b", "i", "em", "strong", "a", "li", "ul"],
+		allowedAttributes: {
+			a: ["href"],
+		},
+	});
 	if (!doc.name) doc.name = "Anonymous";
 	delete doc.token;
 
@@ -41,12 +41,12 @@ export default async (req, res) => {
 			);
 		} else {
 			// If there's no parentCommentId, just create a new comment
-			client.create(doc).then(() => {
+			writeClient.create(doc).then(() => {
 				return res.status(200).json({ message: "Comment Created" });
 			});
 		}
 	} catch (err) {
-		return res.status(500).json({ message: err });
+		return res.status(500).json({ message: String(err) });
 	}
 };
 
@@ -69,7 +69,7 @@ async function appendChildComment(
 ) {
 	// Get the first level parent
 	const query = `*[_type == "comment" && _id == "${firstParentId}"][0]`;
-	const parentComment = await client.fetch(query).then(r => r);
+	const parentComment = await writeClient.fetch(query).then(r => r);
 
 	// Parent Comment has no children, just create a new Array with the child comment
 	if (!parentComment.childComments) {
@@ -100,7 +100,7 @@ async function appendChildComment(
 		}
 	}
 	// Patch the document
-	client
+	writeClient
 		.patch(parentComment._id)
 		.set(parentComment)
 		.commit()

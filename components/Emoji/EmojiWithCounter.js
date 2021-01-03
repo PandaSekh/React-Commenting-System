@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Emoji from "./Emoji";
 
 export default function EmojiWithCounter({
@@ -7,26 +6,6 @@ export default function EmojiWithCounter({
 	initialCounter,
 	onIncrease,
 }) {
-	// const addReaction = () => {
-	// 	if (canAddReaction) {
-	// 		setCanAddReaction(false);
-	// 		setCounter(counter + 1);
-	// 		// fetch("/api/addReaction", {
-	// 		// 	method: "POST",
-	// 		// 	body: JSON.stringify({
-	// 		// 		emojiLabel: emojiLabel,
-	// 		// 		amount: counter,
-	// 		// 	}),
-	// 		// });
-	// 		setTimeout(() => {
-	// 			setCanAddReaction(true);
-	// 		}, 500);
-	// 	}
-	// };
-
-	// const [canAddReaction, setCanAddReaction] = useState(true);
-
-	// const [counter, setCounter] = useState(initialCounter);
 
 	return (
 		<span

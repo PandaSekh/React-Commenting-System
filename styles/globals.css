@@ -30,10 +30,6 @@ a {
 	border-bottom: 1px solid #ababab;
 }
 
-/* button:active {
-	font-size: 17px;
-} */
-
 *,
 *::before,
 *::after {
@@ -286,11 +282,21 @@ li {
 	font-size: 25px;
 	display: flex;
 	align-items: center;
+	cursor: pointer;
+
+	vertical-align: middle;
+	transform: translateZ(0);
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+	backface-visibility: hidden;
+	-moz-osx-font-smoothing: grayscale;
+	transition-duration: 0.1s;
+	transition-property: transform;
 }
 
 .reaction-div {
 	margin-top: 5px;
 	display: inline-flex;
+	flex-flow: wrap;
 }
 
 .emoji-container {
@@ -313,13 +319,10 @@ li {
 	background-color: #f55742;
 	color: #fefefe;
 }
-
-.emoji {
-	cursor: pointer;
-}
-
-.emoji:hover {
-	opacity: 85%;
+.emoji:hover,
+emoji:focus,
+emoji:active {
+	transform: scale(1.1);
 }
 
 .comment-info {
@@ -333,6 +336,7 @@ li {
 
 .reaction-block {
 	display: inline-flex;
+	flex-flow: wrap;
 }
 
 .reaction-adder-emoji {
@@ -346,10 +350,35 @@ li {
 	display: flex;
 	top: 0px;
 	left: 35px;
-	border: 1px solid #808080;
-	/* border-radius: 10%; */
+	border-radius: 10px;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .emoji-adder-menu-closed {
 	display: none;
+}
+
+@media (max-width: 780px) {
+	.comment-content {
+		margin-top: 1.5rem;
+	}
+	.reaction-div {
+		margin: 1rem auto 0px auto;
+	}
+	.reaction-block {
+		padding: 10px;
+	}
+	form {
+		width: 80%;
+	}
+	form.main {
+		width: auto;
+	}
+	input,
+	textarea {
+		width: inherit;
+	}
+	input[type="submit"] {
+		margin: none;
+	}
 }

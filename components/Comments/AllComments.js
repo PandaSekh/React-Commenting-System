@@ -1,16 +1,20 @@
-import { useState, useEffect, Fragment } from "react";
-const query = `*[_type == "comment"]{_id, comment, name, _createdAt, childComments, reactions} | order (_createdAt)`;
+import { useState, useEffect, createContext } from "react";
 import dynamic from "next/dynamic";
+import { client } from "../../lib/sanityClient";
+
+const ReactionsContext = createContext(undefined);
 
 export default function AllComments() {
 	const [comments, setComments] = useState();
+	const [reactions, setReactions] = useState();
 	const [isLoading, setIsLoading] = useState(true);
 
 	const Comment = dynamic(() => import("./SingleComment"));
 	const LoadingComponent = dynamic(() => import("../LoadingComponent"));
 
+	const query = `*[_type == "comment"]{_id, comment, name, _createdAt, childComments} | order (_createdAt)`;
+
 	useEffect(async () => {
-		const client = (await import("../../lib/sanityClient")).client;
 		// Set the already existing comments
 		setComments(await client.fetch(query).then(r => r));
 		// Subscribe to the query Observable and update the state on each update
@@ -26,6 +30,10 @@ export default function AllComments() {
 				);
 			}
 		});
+
+		client
+			.fetch(`*[_type == "commentReactions"]`)
+			.then(r => setReactions(r));
 
 		// Dynamically import Google ReCaptcha
 		(
@@ -45,8 +53,10 @@ export default function AllComments() {
 	});
 
 	return (
-		<Fragment>
+		<ReactionsContext.Provider value={reactions}>
 			{isLoading ? <LoadingComponent /> : <ul>{commentList}</ul>}
-		</Fragment>
+		</ReactionsContext.Provider>
 	);
 }
+
+export { ReactionsContext };

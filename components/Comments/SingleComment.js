@@ -1,23 +1,13 @@
 import AddComment from "../AddComment/AddCommentForm";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import CommentImage from "./CommentImage";
 import ReactionBlock from "../Emoji/ReactionBlock";
+import parser from "../../lib/snarkdown";
+import { formatDate } from "../../lib/utils";
 
 export default function Comment({ comment, firstParentId }) {
 	const [showReplyBox, setShowReplyBox] = useState(false);
-
 	const toggleReplyBox = () => setShowReplyBox(!showReplyBox);
-
-	const formatDate = fullDate => {
-		const date = fullDate?.split("T")[0];
-		const year = date.split("-")[0];
-		const month = new Date(date).toLocaleDateString("default", {
-			month: "long",
-		});
-		const day = date.split("-")[2];
-
-		return `${day} ${month} ${year}`;
-	};
 
 	return (
 		<li
@@ -35,24 +25,23 @@ export default function Comment({ comment, firstParentId }) {
 					<strong>{formatDate(comment._createdAt)}</strong>
 				</span>
 			</span>
-			<p className="comment-content">{comment.comment.trim()}</p>
+			<p
+				className="comment-content"
+				dangerouslySetInnerHTML={{
+					__html: parser(comment.comment.trim()),
+				}}
+			></p>
 			<div className="reaction-div">
 				<button onClick={toggleReplyBox} className="reply-button">
 					Reply
 				</button>
-				<ReactionBlock
-					reactions={comment.reactions}
-					commentId={comment._id}
-					firstParentId={firstParentId}
-				/>
+				<ReactionBlock commentId={comment._id} />
 			</div>
 			{showReplyBox && (
-				<Fragment>
-					<AddComment
-						parentCommentId={comment._id}
-						firstParentId={firstParentId || comment._id}
-					/>
-				</Fragment>
+				<AddComment
+					parentCommentId={comment._id}
+					firstParentId={firstParentId || comment._id}
+				/>
 			)}
 
 			{comment.childComments && (

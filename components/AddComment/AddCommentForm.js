@@ -3,7 +3,11 @@ import InputError from "./InputError";
 import { Fragment, useState } from "react";
 import SubmitMessage from "./SubmitMessage";
 
-export default function AddCommentForm({ parentCommentId, firstParentId }) {
+export default function AddCommentForm({
+	parentCommentId,
+	firstParentId,
+	extraClass,
+}) {
 	const [submitMessage, setSubmitMessage] = useState({});
 	const [submittedFormData, setSubmittedFormData] = useState({});
 	const [isSending, setIsSending] = useState(false);
@@ -28,11 +32,18 @@ export default function AddCommentForm({ parentCommentId, firstParentId }) {
 						method: "POST",
 						body: JSON.stringify(data),
 					})
-						.then(r => r.json())
+						.then(r => {
+							if (r.status !== 200) {
+								r.json().then(e => {
+									throw new Error(e);
+								});
+							} else return r.json();
+						})
 						.then(j => {
 							reset({ ...submittedFormData });
 							setSubmittedFormData({});
 							setIsSending(false);
+
 							setSubmitMessage({
 								text: j.message,
 								success: true,
@@ -42,7 +53,10 @@ export default function AddCommentForm({ parentCommentId, firstParentId }) {
 							}, 2000);
 						})
 						.catch(err => {
-							setSubmitMessage({ text: err, success: false });
+							setSubmitMessage({
+								text: String(err.message),
+								success: false,
+							});
 							setTimeout(() => {
 								setSubmitMessage({});
 							}, 2000);
@@ -53,8 +67,10 @@ export default function AddCommentForm({ parentCommentId, firstParentId }) {
 
 	return (
 		<Fragment>
-			{submitMessage && <SubmitMessage message={submitMessage} />}
-			<form onSubmit={handleSubmit(onSubmit)}>
+			{submitMessage !== undefined && (
+				<SubmitMessage message={submitMessage} />
+			)}
+			<form onSubmit={handleSubmit(onSubmit)} className={extraClass}>
 				<input
 					type="text"
 					placeholder="Name (Optional)"
@@ -64,16 +80,14 @@ export default function AddCommentForm({ parentCommentId, firstParentId }) {
 				{errors.name && <InputError error={"Your name is required"} />}
 				<input
 					type="text"
-					placeholder="Email"
+					placeholder="Email (Optional)"
 					name="email"
-					ref={register({ required: true, pattern: /^\S+@\S+$/i })}
+					ref={register({ required: false, pattern: /^\S+@\S+$/i })}
 				/>
-				{errors.email && (
-					<InputError error={"Your email is required"} />
-				)}
+				{errors.email && <InputError error={"Invalid email"} />}
 				<textarea
 					name="comment"
-					placeholder="Your Comment"
+					placeholder="Your Comment (Supports Markdown)"
 					rows="5"
 					ref={register({ required: true, maxLength: 5000 })}
 				/>
