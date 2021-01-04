@@ -9,7 +9,6 @@ export default (req, res) => {
 		// Check ReCaptcha Token
 		verifyRecaptchaToken(doc.token).then(isValidToken => {
 			if (!isValidToken) {
-				console.log("Invalid token");
 				reject(res.status(406).end());
 			}
 		});
@@ -36,8 +35,6 @@ export default (req, res) => {
 				const parentCommentId = doc.parentCommentId;
 				delete doc.parentCommentId;
 				delete doc.firstParentId;
-
-				console.log("Doc: ", doc);
 
 				appendChildComment(firstParentId, parentCommentId, doc).then(
 					() => {
@@ -73,7 +70,6 @@ function verifyRecaptchaToken(token) {
 }
 
 function appendChildComment(firstParentId, parentCommentId, childComment) {
-	console.log("Appending child");
 	return new Promise(async resolve => {
 		// Get the first level parent
 		const query = `*[_type == "comment" && _id == "${firstParentId}"][0]`;
@@ -110,14 +106,13 @@ function appendChildComment(firstParentId, parentCommentId, childComment) {
 				];
 			}
 		}
-		console.log("Saving child");
+
 		// Patch the document
 		writeClient
 			.patch(parentComment._id)
 			.set(parentComment)
 			.commit()
-			.then(r => {
-				console.log("Response: ", r);
+			.then(() => {
 				resolve(childComment._key);
 			});
 

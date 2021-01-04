@@ -2,7 +2,6 @@ require("dotenv").config();
 import { writeClient } from "../../lib/sanityClient";
 
 export default (req, res) => {
-	console.log("Called method");
 	return new Promise(resolve => {
 		// Prepare the document
 		const body = JSON.parse(req.body);
@@ -13,14 +12,12 @@ export default (req, res) => {
 		const query = `*[_type == "commentReactions" && commentId == "${_id}"]{_id}[0]`;
 		// const comment = await writeClient.fetch(query);
 		writeClient.fetch(query).then(comment => {
-			console.log("before if, comment: ", comment);
 			if (comment) {
 				writeClient
 					.patch(comment._id)
 					.set({ reactions: reactions })
 					.commit()
 					.then(() => {
-						console.log("then ");
 						resolve(res.status(200).end());
 					});
 			} else {
@@ -31,7 +28,6 @@ export default (req, res) => {
 						reactions: reactions,
 					})
 					.then(() => {
-						console.log("then in");
 						resolve(res.status(200).end());
 					});
 			}
