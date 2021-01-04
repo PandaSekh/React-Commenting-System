@@ -4,14 +4,14 @@ import sanitizeHtml from "sanitize-html";
 import { writeClient } from "../../lib/sanityClient";
 
 export default (req, res) => {
-	return new Promise(async (resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		const doc = JSON.parse(req.body);
 		// Check ReCaptcha Token
-		const isValidToken = await verifyRecaptchaToken(doc.token);
-		if (!isValidToken) {
-			res.status(406).end();
-			reject();
-		}
+		verifyRecaptchaToken(doc.token).then(isValidToken => {
+			if (!isValidToken) {
+				reject(res.status(406).end());
+			}
+		});
 
 		// Update the document with the required values for Sanity
 		doc._type = "comment";
@@ -36,24 +36,23 @@ export default (req, res) => {
 				delete doc.parentCommentId;
 				delete doc.firstParentId;
 
-				await appendChildComment(
-					firstParentId,
-					parentCommentId,
-					doc
-				).then(() => {
-					res.status(200).json({ message: "Comment Created" });
-					resolve();
-				});
+				appendChildComment(firstParentId, parentCommentId, doc).then(
+					() => {
+						resolve(
+							res.status(200).json({ message: "Comment Created" })
+						);
+					}
+				);
 			} else {
 				// If there's no parentCommentId, just create a new comment
 				writeClient.create(doc).then(() => {
-					res.status(200).json({ message: "Comment Created" });
-					resolve();
+					resolve(
+						res.status(200).json({ message: "Comment Created" })
+					);
 				});
 			}
 		} catch (err) {
-			res.status(500).json({ message: String(err) });
-			reject();
+			reject(res.status(500).json({ message: String(err) }));
 		}
 	});
 };
