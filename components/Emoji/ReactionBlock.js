@@ -36,7 +36,7 @@ export default function ReactionBlock({ commentId }) {
 		return () => {
 			sub.unsubscribe();
 		};
-	},[]);
+	}, []);
 
 	useEffect(() => {
 		if (shouldUpdateDb) updateReactionsOnDatabase();
@@ -81,7 +81,7 @@ export default function ReactionBlock({ commentId }) {
 					commentId: commentId,
 					reactions: reactions,
 				}),
-			});
+			}).then(r => console.log("R: ", r));
 			dbDebouncerTimer = null;
 		}, 1000 * 1.5);
 	}
