@@ -27,6 +27,24 @@ export default (req, res) => {
 		if (!doc.name) doc.name = "Anonymous";
 		delete doc.token;
 
+		if (doc.userImage) {
+			console.log(doc);
+			return;
+
+			writeClient.assets
+				.upload("image", doc.userImage[0], {
+					filename: doc._key,
+				})
+				.then(imageAsset => {
+					doc.userImage = {
+						_type: "image",
+						asset: {
+							_type: "reference",
+							_ref: imageAsset._id,
+						},
+					};
+				});
+		}
 		// If the doc has a parentCommentId, it means it's a child comment
 		try {
 			if (doc.parentCommentId) {

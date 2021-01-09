@@ -386,3 +386,61 @@ emoji:active {
 		margin: none;
 	}
 }
+
+.new-comment-image {
+	display: inline-block;
+	width: min-content;
+	cursor: pointer;
+}
+
+.new-comment-image > img {
+	cursor: pointer;
+	width: 100px;
+	height: 100px;
+	margin: auto;
+	border-radius: 10px;
+	-webkit-box-shadow: 2px 2px 5px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow: 2px 2px 5px 0px rgba(50, 50, 50, 0.75);
+	box-shadow: 2px 2px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+.img-upload {
+	opacity: 0;
+	position: absolute;
+	z-index: -1;
+}
+
+.img-upload-label {
+	margin: auto;
+	cursor: pointer;
+	position: relative;
+}
+
+.img-upload-label:hover .icon-upload {
+	opacity: 60%;
+	transition: all 0.1s linear;
+}
+
+.icon-upload {
+	opacity: 0;
+	background-color: #000000;
+	position: absolute;
+	width: 100%;
+	height: 40px;
+	top: 60px;
+	border-top-left-radius: 100px;
+	border-top-right-radius: 100px;
+	border-bottom-right-radius: 30px;
+	border-bottom-left-radius: 30px;
+	transition: all 0.1s linear;
+}
+
+.camera-icon {
+	fill: #fefefe;
+	margin: auto;
+}
+
+.camera-icon-container {
+	margin: 8% auto;
+	width: min-content;
+}

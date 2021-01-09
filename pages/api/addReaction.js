@@ -10,7 +10,6 @@ export default (req, res) => {
 		reactions.forEach(r => (r._key = r.label));
 
 		const query = `*[_type == "commentReactions" && commentId == "${_id}"]{_id}[0]`;
-		// const comment = await writeClient.fetch(query);
 		writeClient.fetch(query).then(comment => {
 			if (comment) {
 				writeClient
