@@ -12,13 +12,14 @@ export default function AllComments() {
 	const Comment = dynamic(() => import("./SingleComment"));
 	const LoadingComponent = dynamic(() => import("../LoadingComponent"));
 
-	const query = `*[_type == "comment"]{_id, comment, name, _createdAt, childComments} | order (_createdAt)`;
+	const query = `*[_type == "comment" && approved==true]{_id, comment, name, _createdAt, childComments} | order (_createdAt)`;
+	let querySub = undefined;
 
 	useEffect(async () => {
 		// Set the already existing comments
 		setComments(await client.fetch(query).then(r => r));
 		// Subscribe to the query Observable and update the state on each update
-		const sub = client.listen(query).subscribe(update => {
+		querySub = client.listen(query).subscribe(update => {
 			if (update) {
 				setComments(comments =>
 					[
@@ -44,7 +45,7 @@ export default function AllComments() {
 		);
 		// Unsubscribe on Component unmount
 		return () => {
-			sub.unsubscribe();
+			querySub.unsubscribe();
 		};
 	}, []);
 

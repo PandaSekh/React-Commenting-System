@@ -3,6 +3,10 @@ import getKey from "../../lib/keyGen";
 import sanitizeHtml from "sanitize-html";
 import { writeClient } from "../../lib/sanityClient";
 
+var urlRegEx = new RegExp(
+	"([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?([^ ])+"
+);
+
 export default (req, res) => {
 	return new Promise((resolve, reject) => {
 		const doc = JSON.parse(req.body);
@@ -27,24 +31,25 @@ export default (req, res) => {
 		if (!doc.name) doc.name = "Anonymous";
 		delete doc.token;
 
-		if (doc.userImage) {
-			console.log(doc);
-			return;
+		if (doc.comment.match(urlRegEx)) doc.approved = false;
+		else doc.approved = true;
 
-			writeClient.assets
-				.upload("image", doc.userImage[0], {
-					filename: doc._key,
-				})
-				.then(imageAsset => {
-					doc.userImage = {
-						_type: "image",
-						asset: {
-							_type: "reference",
-							_ref: imageAsset._id,
-						},
-					};
-				});
-		}
+		// if (doc.userImage) {
+		// 	writeClient.assets
+		// 		.upload("image", doc.userImage[0], {
+		// 			filename: doc._key,
+		// 		})
+		// 		.then(imageAsset => {
+		// 			doc.userImage = {
+		// 				_type: "image",
+		// 				asset: {
+		// 					_type: "reference",
+		// 					_ref: imageAsset._id,
+		// 				},
+		// 			};
+		// 		});
+		// }
+
 		// If the doc has a parentCommentId, it means it's a child comment
 		try {
 			if (doc.parentCommentId) {

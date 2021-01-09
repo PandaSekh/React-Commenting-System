@@ -16,13 +16,15 @@ export default function ReactionBlock({ commentId }) {
 	const [reactions, setReactions] = useState([]);
 	const [shouldUpdateDb, setShouldUpdateDb] = useState(false);
 
+	let querySub = undefined;
+
 	useEffect(() => {
 		// If there are reactions in the context, set them
 		if (contextReactions) setReactions(contextReactions);
 
 		// Subscribe to the query Observable and update the state on each update
 		const query = `*[_type == "commentReactions" && commentId=="${commentId}"]`;
-		const sub = client.listen(query).subscribe(update => {
+		querySub = client.listen(query).subscribe(update => {
 			if (update) {
 				setReactions([
 					...update.result.reactions.sort((a, b) =>
@@ -34,7 +36,7 @@ export default function ReactionBlock({ commentId }) {
 
 		// Unsubscribe on Component unmount
 		return () => {
-			sub.unsubscribe();
+			querySub.unsubscribe();
 		};
 	}, []);
 

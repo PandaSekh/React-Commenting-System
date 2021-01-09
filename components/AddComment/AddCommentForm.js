@@ -14,17 +14,17 @@ export default function AddCommentForm({
 	const [isSending, setIsSending] = useState(false);
 	const { register, errors, handleSubmit, reset } = useForm();
 
-	const [imgSrc, setImgSrc] = useState("");
+	// const [imgSrc, setImgSrc] = useState("");
 
-	function uploadHandler(e) {
-		setImgSrc(URL.createObjectURL(e.target.files[0]));
-	}
+	// function uploadHandler(e) {
+	// 	setImgSrc(URL.createObjectURL(e.target.files[0]));
+	// }
 
 	const onSubmit = data => {
 		setSubmittedFormData(data);
 		setIsSending(true);
 
-		if (data.userImage) data.userImage = data.userImage[0];
+		// if (data.userImage) data.userImage = data.userImage[0];
 
 		if (parentCommentId) {
 			data.parentCommentId = parentCommentId;
@@ -81,11 +81,11 @@ export default function AddCommentForm({
 				<SubmitMessage message={submitMessage} />
 			)}
 			<form onSubmit={handleSubmit(onSubmit)} className={extraClass}>
-				<ImageUpload
+				{/* <ImageUpload
 					uploadHandler={uploadHandler}
 					imgSrc={imgSrc}
 					register={register}
-				/>
+				/> */}
 				<input
 					type="text"
 					placeholder="Name (Optional)"

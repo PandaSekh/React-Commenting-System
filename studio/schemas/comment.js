@@ -32,6 +32,11 @@ export default {
 			type: "array",
 			of: [{ type: "comment" }],
 		},
+		{
+			name: "approved",
+			title: "Approved",
+			type: "boolean",
+		},
 	],
 	preview: {
 		select: {
