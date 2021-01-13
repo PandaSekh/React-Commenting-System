@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import InputError from "./InputError";
 import { Fragment, useState } from "react";
 import SubmitMessage from "./SubmitMessage";
-import ImageUpload from "./ImageUpload";
+// import ImageUpload from "./ImageUpload";
 
 export default function AddCommentForm({
 	parentCommentId,

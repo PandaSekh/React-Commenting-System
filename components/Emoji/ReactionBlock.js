@@ -83,9 +83,9 @@ export default function ReactionBlock({ commentId }) {
 					commentId: commentId,
 					reactions: reactions,
 				}),
-			}).then(r => console.log("R: ", r));
+			});
 			dbDebouncerTimer = null;
-		}, 1000 * 1.5);
+		}, 1000 * 1);
 	}
 
 	const mappedReactions = reactions.map(reaction => (

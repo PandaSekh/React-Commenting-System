@@ -26,9 +26,6 @@ export default (req, res) => {
 						},
 					})
 					.commit();
-			})
-			.then(() => {
-				console.log("Done!");
 			});
 	});
 };
