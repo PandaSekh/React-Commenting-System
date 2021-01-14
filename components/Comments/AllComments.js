@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import dynamic from "next/dynamic";
 import { client } from "../../lib/sanityClient";
+import load from "@pandasekh/dynamic-script-loader";
 
 const ReactionsContext = createContext(undefined);
 
@@ -37,12 +38,9 @@ export default function AllComments() {
 			.then(r => setReactions(r));
 
 		// Dynamically import Google ReCaptcha
-		(
-			await import("../../lib/dynamicScriptLoader")
-		).default(
-			`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`,
-			() => setIsLoading(false)
-		);
+		load(
+			`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`
+		).then(() => setIsLoading(false));
 		// Unsubscribe on Component unmount
 		return () => {
 			querySub.unsubscribe();
