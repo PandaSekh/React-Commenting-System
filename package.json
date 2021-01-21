@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "npm-link-shared ./node_modules/lepre/node_modules . react",
     "dev": "next dev",
     "build": "next build",
     "start": "next start"
@@ -13,7 +12,7 @@
     "@sanity/client": "^2.1.4",
     "@sanity/image-url": "^0.140.19",
     "dotenv": "^8.2.0",
-    "lepre": "file:../lepre",
+    "lepre": "0.1.0",
     "next": "10.0.4",
     "react": "17.0.1",
     "react-dom": "17.0.1",
