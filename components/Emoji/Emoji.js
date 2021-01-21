@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 export default function Emoji({ emoji, label, className, onClickCallback }) {
 	return (
 		<span
 			className={
-				className ? className + " emoji hvr-grow " : "emoji hvr-grow "
+				className ? className + " emoji" : "emoji"
 			}
 			role="img"
 			aria-label={label ? label : ""}

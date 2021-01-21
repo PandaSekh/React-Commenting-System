@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import Emoji from "./Emoji";
 
 export default function EmojiWithCounter({

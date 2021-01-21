@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import Emoji from "./Emoji";
 import { Fragment, useState } from "react";
 import getKey from "../../lib/keyGen";
